@@ -1,27 +1,15 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package com.mycompany.relojbinario;
 
 import java.time.LocalDateTime;
 
-/**
- *
- * @author carlosbarrios
- */
 public class principalReloj extends javax.swing.JFrame {
-    private boolean formato12 = false; //empieza en formato de 24 horas
-    //se guarda la ultima operacion para volver a mostrarla si cambia el formato
+    private boolean formato12 = false;
     private FechaHora fechaInicial = null;
     private FechaHora fechaResultado = null;
     private String procedimiento = "";
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(principalReloj.class.getName());
 
-    /**
-     * Creates new form principalReloj
-     */
     public principalReloj() {
         initComponents();
         setTitle("Estructuras Lógicas II - Reloj y aritmética binaria");
@@ -42,8 +30,6 @@ public class principalReloj extends javax.swing.JFrame {
         this.jTextArea2.setText("Escriba cuánto tiempo quiere sumar o restar y presione Sumar o Restar.");
         mostrarReloj();
 
-        //el timer actualiza el reloj solo (igual que en Cuenta1A10)
-        //cada medio segundo para que no se salte ningun segundo
         javax.swing.Timer timer = new javax.swing.Timer(500, null);
         timer.addActionListener(new java.awt.event.ActionListener() {
             @Override
@@ -52,18 +38,16 @@ public class principalReloj extends javax.swing.JFrame {
             }
         });
         timer.start();
-        pack(); //ajusta la ventana a los textos nuevos
+        pack();
         setLocationRelativeTo(null);
     }
 
-    //lee la fecha y hora del equipo
     private FechaHora leerFechaActual(){
         LocalDateTime ahora = LocalDateTime.now();
         return new FechaHora(ahora.getDayOfMonth(), ahora.getMonthValue(), ahora.getYear(),
                 ahora.getHour(), ahora.getMinute(), ahora.getSecond());
     }
 
-    //una linea por cada base: 10, 2, 8 y 16
     private String textoCuatroBases(FechaHora fecha){
         StringBuilder texto = new StringBuilder();
         texto.append("Base 10:  " + fecha.textoEnBase(10, formato12) + "\n");
@@ -77,9 +61,6 @@ public class principalReloj extends javax.swing.JFrame {
         jTextArea1.setText(textoCuatroBases(leerFechaActual()));
     }
 
-    //SUMAR O RESTAR TIEMPO
-    //A = segundos que van del dia, B = segundos que escribio el usuario
-    //sumar: A + B    restar: A + complemento a 2 de B
     private void operar(boolean restar){
         int horas = 0;
         int minutos = 0;
@@ -92,18 +73,16 @@ public class principalReloj extends javax.swing.JFrame {
             javax.swing.JOptionPane.showMessageDialog(this, "Escriba solo números enteros en horas, minutos y segundos (puede poner 0).");
             return;
         }
-        //validacion
         if (horas < 0 || minutos < 0 || segundos < 0) {
             javax.swing.JOptionPane.showMessageDialog(this, "No se permiten números negativos, use el botón Restar.");
             return;
         }
-        //con este limite el resultado siempre cabe en los 32 bits
         if (horas > 100000 || minutos > 100000 || segundos > 100000) {
             javax.swing.JOptionPane.showMessageDialog(this, "Cada cantidad puede ser como máximo 100000.");
             return;
         }
 
-        fechaInicial = leerFechaActual(); //se toma la hora en el momento de presionar el boton
+        fechaInicial = leerFechaActual();
         int a = fechaInicial.segundosDelDia();
         int b = horas * 3600 + minutos * 60 + segundos;
 
@@ -115,8 +94,6 @@ public class principalReloj extends javax.swing.JFrame {
         }
         String binarioResultado = Conversiones.sumarBinarios(binarioA, operando);
 
-        //si el primer bit es 1 el resultado es negativo (la resta se paso al dia anterior)
-        //su valor se saca con el complemento a 2 del resultado
         int totalBinario = 0;
         if (binarioResultado.charAt(0) == '1') {
             totalBinario = -Conversiones.binarioADecimal(Conversiones.complementoADos(binarioResultado));
@@ -125,7 +102,6 @@ public class principalReloj extends javax.swing.JFrame {
         }
         fechaResultado = Calendario.calcularFecha(fechaInicial, totalBinario);
 
-        //comprobacion: la misma operacion pero en decimal normal
         int totalDecimal = 0;
         if (restar) {
             totalDecimal = a - b;
@@ -170,7 +146,7 @@ public class principalReloj extends javax.swing.JFrame {
 
     private void mostrarResultado(){
         if (fechaInicial == null) {
-            return; //todavia no se ha hecho ninguna operacion
+            return;
         }
         StringBuilder texto = new StringBuilder();
         texto.append("FECHA Y HORA AL PRESIONAR EL BOTÓN\n");
@@ -181,11 +157,6 @@ public class principalReloj extends javax.swing.JFrame {
         jTextArea2.setText(texto.toString());
     }
 
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -312,38 +283,26 @@ public class principalReloj extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
         formato12 = false;
         mostrarReloj();
         mostrarResultado();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
         formato12 = true;
         mostrarReloj();
         mostrarResultado();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
         operar(false);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
         operar(true);
     }//GEN-LAST:event_jButton4ActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
-         */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -354,9 +313,7 @@ public class principalReloj extends javax.swing.JFrame {
         } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
             logger.log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
 
-        /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> new principalReloj().setVisible(true));
     }
 

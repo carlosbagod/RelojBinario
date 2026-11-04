@@ -1,23 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mycompany.relojbinario;
 
-/**
- *
- * @author carlosbarrios
- */
-//aqui estan las conversiones de base y las operaciones con binarios
-//no se usa ninguna funcion de java que cambie de base, solo / % + y ciclos
 public class Conversiones {
-    //todos los binarios de las operaciones tienen 32 bits
     static final int BITS = 32;
 
-    //DECIMAL A BASE 2, 8 O 16
-    //se divide entre la base y cada residuo se pega a la izquierda (como en estructuraslogicas)
     public static String convertirBase(int numero, int base){
-        String digitos = "0123456789ABCDEF"; //del 10 al 15 se usan las letras
+        String digitos = "0123456789ABCDEF";
         if (numero == 0) {
             return "0";
         }
@@ -31,8 +18,6 @@ public class Conversiones {
         return resultado;
     }
 
-    //BINARIO A DECIMAL
-    //se recorre de derecha a izquierda y la potencia se duplica (como en BinarioaDecimal)
     public static int binarioADecimal(String binario){
         int decimal = 0;
         int potencia = 1;
@@ -47,7 +32,6 @@ public class Conversiones {
         return decimal;
     }
 
-    //pone ceros a la izquierda hasta tener 32 bits, el valor no cambia
     public static String completarBits(String binario){
         while (binario.length() < BITS) {
             binario = "0" + binario;
@@ -55,8 +39,6 @@ public class Conversiones {
         return binario;
     }
 
-    //SUMA BINARIA bit por bit de derecha a izquierda con acarreo
-    //el acarreo que sobra al final se descarta (por eso funciona el complemento a 2)
     public static String sumarBinarios(String a, String b){
         String resultado = "";
         int acarreo = 0;
@@ -74,7 +56,6 @@ public class Conversiones {
         return resultado;
     }
 
-    //COMPLEMENTO A 2: se invierten los bits y se le suma 1
     public static String complementoADos(String binario){
         String invertido = "";
         for (int i = 0; i < binario.length(); i++) {
